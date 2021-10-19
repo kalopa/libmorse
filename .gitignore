@@ -23,13 +23,12 @@
 *.lo
 
 # Shared objects (inc. Windows DLLs)
-*.dll
 *.so
 *.so.*
 *.dylib
 
 # Executables
-*.exe
+morse_send
 *.out
 *.app
 *.i*86
