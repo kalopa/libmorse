@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020-21, Kalopa Robotics Limited.  All rights
- * reserved. Written by Dermot Tynan, EI4HRB <dtynan@kalopa.com>.
+ * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -96,8 +96,10 @@ morse_audio_tone(struct morse *mp, int len)
 void
 morse_audio_silence(struct morse *mp)
 {
-	while (mp->sym_delay-- > 0)
+	while (mp->sym_delay > 0) {
 		_audio_out(mp, 0);
+		mp->sym_delay--;
+	}
 }
 
 /*

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020-21, Kalopa Robotics Limited.  All rights
- * reserved. Written by Dermot Tynan, EI4HRB <dtynan@kalopa.com>.
+ * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -117,30 +117,42 @@ morse_send_char(struct morse *mp, int ch)
 		bitreg >>= 1;
 		mp->sym_delay = mp->bit_time;
 	}
-	mp->sym_delay = mp->delay_time * 3;
+	mp->sym_delay = mp->char_delay;
 }
 
 /*
- * Send a string of characters as Morse Code. There is a slight bit of
- * recursion here as we really should be called not with strings but with
- * words. So we split the string into its constituent words and process
- * each of them in turn.
+ * Send a word by sending each character in turn and then waiting for the
+ * word delay.
+ */
+void
+morse_send_word(struct morse *mp, char *strp)
+{
+	char *cp;
+
+	if (strp == NULL || *strp == '\0')
+		return;
+	while (*strp != '\0')
+		morse_send_char(mp, *strp++);
+	mp->sym_delay = mp->word_delay;
+}
+
+/*
+ * Send a string of characters/words as Morse code. Really the work is
+ * done in the previous two functions. This code just splits the string
+ * into words.
  */
 void
 morse_send_string(struct morse *mp, char *strp)
 {
 	char *cp;
 
-	if (strp == NULL || *strp == '\0')
-		return;
-	if ((cp = strpbrk(strp, " \t")) != NULL) {
-		*cp++ = '\0';
-		while (isspace(*cp))
-			cp++;
-		morse_send_string(mp, strp);
+	while (strp != NULL && *strp != '\0') {
+		if ((cp = strpbrk(strp, " \t")) != NULL) {
+			*cp++ = '\0';
+			while (isspace(*cp))
+				cp++;
+		}
+		morse_send_word(mp, strp);
 		strp = cp;
 	}
-	while (*strp != '\0')
-		morse_send_char(mp, *strp++);
-	mp->sym_delay = mp->delay_time * 7;
 }

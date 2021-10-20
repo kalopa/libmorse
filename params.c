@@ -106,7 +106,8 @@ morse_calc_params(struct morse *mp)
 		 */
 		element_time = (60.0/my_wpm - 37.2/effective_wpm) / 19.0;
 	}
-	mp->delay_time = (int )((double )mp->sample_rate * element_time + 0.5);
+	mp->char_delay = (int )((double )mp->sample_rate * element_time * 3.0 + 0.5);
+	mp->word_delay = (int )((double )mp->sample_rate * element_time * 7.0 + 0.5);
 }
 
 /*

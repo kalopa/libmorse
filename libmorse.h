@@ -61,7 +61,8 @@ struct  morse	{
 	int				setup_done;
 	unsigned int	time_stamp;
 	unsigned int	bit_time;
-	unsigned int	delay_time;
+	unsigned int	char_delay;
+	unsigned int	word_delay;
 	unsigned int	sym_delay;
 	unsigned short	word;
 	int				offset;
@@ -74,6 +75,7 @@ struct  morse	{
  */
 struct morse	*morse_init(int);
 void			morse_send_char(struct morse *, int);
+void			morse_send_word(struct morse *, char *);
 void			morse_send_string(struct morse *, char *);
 void			morse_drain(struct morse *);
 void			morse_close(struct morse *);
