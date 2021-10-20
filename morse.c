@@ -127,8 +127,6 @@ morse_send_char(struct morse *mp, int ch)
 void
 morse_send_word(struct morse *mp, char *strp)
 {
-	char *cp;
-
 	if (strp == NULL || *strp == '\0')
 		return;
 	while (*strp != '\0')
