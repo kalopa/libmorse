@@ -64,6 +64,7 @@ struct  morse	{
 	unsigned int	char_delay;
 	unsigned int	word_delay;
 	unsigned int	sym_delay;
+	int				prosign;
 	unsigned short	word;
 	int				offset;
 	void			*audio;

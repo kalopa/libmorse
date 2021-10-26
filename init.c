@@ -63,6 +63,7 @@ morse_init(int wpm)
 	mp->wpm = wpm;
 	mp->setup_done = 0;
 	mp->farnsworth = 0;
+	mp->prosign = 0;
 	mp->amplitude = 85;
 	mp->sample_rate = 44100;
 	mp->tone_frequency = 800.0;

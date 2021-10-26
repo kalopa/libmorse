@@ -101,7 +101,8 @@ morse_send_char(struct morse *mp, int ch)
 		bitreg >>= 1;
 		mp->sym_delay = mp->bit_time;
 	}
-	mp->sym_delay = mp->char_delay;
+	if (!mp->prosign)
+		mp->sym_delay = mp->char_delay;
 }
 
 /*
@@ -113,8 +114,18 @@ morse_send_word(struct morse *mp, char *strp)
 {
 	if (strp == NULL || *strp == '\0')
 		return;
+	if (*strp == '<') {
+		char *cp;
+
+		strp++;
+		if ((cp = strchr(strp, '>')) != NULL)
+			*cp = '\0';
+		mp->prosign = 1;
+	} else
+		mp->prosign = 0;
 	while (*strp != '\0')
 		morse_send_char(mp, *strp++);
+	mp->prosign = 0;
 	mp->sym_delay = mp->word_delay;
 }
 
