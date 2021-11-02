@@ -28,7 +28,7 @@
 *.dylib
 
 # Executables
-morse_send
+morse_play
 *.out
 *.app
 *.i*86

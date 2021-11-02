@@ -40,14 +40,14 @@ SRCS=	init.c morse.c audio.c params.c
 OBJS=	$(SRCS:.c=.o)
 LIB=	libmorse.a
 
-all:	$(LIB) morse_send
+all:	$(LIB) morse_play
 
-install: $(LIB) morse_send
-	$(INSTALL) $(LIB) /usr/local/lib
-	$(INSTALL) morse_send  /usr/local/bin
+install: $(LIB) morse_play
+	install -c $(LIB) /usr/local/lib
+	install -c morse_play  /usr/local/bin
 
 clean:
-	rm -f morse_send $(LIB) $(OBJS) main.o tags
+	rm -f morse_play $(LIB) $(OBJS) main.o tags
 
 tags:	$(SRCS)
 	ctags $(SRCS)
@@ -55,7 +55,7 @@ tags:	$(SRCS)
 $(LIB):	$(OBJS)
 	$(AR) r $@ $?
 
-morse_send: main.o $(LIB)
-	$(CC) -o morse_send main.o -L. -lmorse -lasound -lm
+morse_play: main.o $(LIB)
+	$(CC) -o morse_play main.o -L. -lmorse -lasound -lm
 
 $(OBJS): libmorse.h

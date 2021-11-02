@@ -42,7 +42,7 @@
  *   -s WPM     Set the WPM (a number between 5 and 60)
  *
  * Try:
- *   ./morse_send -f -s 5 CQ CQ CQ DE EI4HRB
+ *   ./morse_play -f -s 5 CQ CQ CQ DE EI4HRB
  */
 #include <stdio.h>
 #include <unistd.h>
@@ -66,7 +66,7 @@ main(int argc, char *argv[])
 	wpm = 18;
 	opterr = fw = 0;
 	ampl = -1;
-	while ((i = getopt(argc, argv, "a:fs:")) != EOF) {
+	while ((i = getopt(argc, argv, "a:f:s:")) != EOF) {
 		switch (i) {
 		case 'a':
 			if ((ampl = atoi(optarg)) < 0 || ampl > 100) {
@@ -77,9 +77,14 @@ main(int argc, char *argv[])
 
 		case 'f':
 			fw = 1;
+			if ((wpm = atoi(optarg)) < 5 || wpm > 60) {
+				fprintf(stderr, "WPM value should be between 5 and 60.\n");
+				usage();
+			}
 			break;
 
 		case 's':
+			fw = 0;
 			if ((wpm = atoi(optarg)) < 5 || wpm > 60) {
 				fprintf(stderr, "WPM value should be between 5 and 60.\n");
 				usage();
@@ -104,7 +109,7 @@ main(int argc, char *argv[])
 	for (i = len = optind; i < argc; i++)
 		len += strlen(argv[i]) + 1;
 	if ((str = (char *)malloc(len)) == NULL) {
-		perror("morse_send: malloc");
+		perror("morse_play: malloc");
 		exit(1);
 	}
 	strcpy(str, argv[optind++]);
@@ -125,9 +130,9 @@ main(int argc, char *argv[])
 void
 usage()
 {
-	fprintf(stderr, "Usage: morse_send [-a AMPL][-f][-s WPM] <word> [<word> ...]\n");
-	fprintf(stderr, "\t-a AMPL\tAmplification - a number between 0 and 100.\n");
-	fprintf(stderr, "\t-f\tInvoke 'Farnsworth' mode for easier learning.\n");
+	fprintf(stderr, "Usage: morse_play [-a AMPL][-f WPM][-s WPM] <word> [<word> ...]\n");
 	fprintf(stderr, "\t-s WPM\tSet the rate in words per minute.\n");
+	fprintf(stderr, "\t-f WPM\tInvoke 'Farnsworth' mode for easier learning.\n");
+	fprintf(stderr, "\t-a AMPL\tAmplification - a number between 0 and 100.\n");
 	exit(2);
 }

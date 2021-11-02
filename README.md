@@ -21,7 +21,7 @@ Once you have the prerequisites, just type:
 
     make
 
-## morse\_send
+## morse\_play
 
 This is a simple test program for the morse library.
 It takes as arguments an option Words/Minute value (in the range between 5 and 60 WPM)
@@ -29,12 +29,12 @@ as well as some text to be translated into morse code.
 
 The command-line options are as follows:
 *  **-a NN**      Set the output volume (0 -> 100)
-*  **-f**         Invoke "Farnsworth" mode - see the params.c file for info
+*  **-f WPM**     Invoke "Farnsworth" mode - see the params.c file for info
 *  **-s WPM**     Set the WPM (a number between 5 and 60)
 
 For example, try:
 
-    ./morse_send -f -s 5 CQ CQ CQ DE EI4HRB
+    ./morse_play -f -s 5 CQ CQ CQ DE EI4HRB
 
 ## The Farnsworth Technique
 
@@ -54,7 +54,7 @@ Here's a quote from the
 > words per minute, students are forced to shift from the counting
 > mode to the rhythm recognition mode."
 
-The **-f** option to morse\_send enables the Farnsworth mode if the
+The **-f** option to morse\_play enables the Farnsworth mode if the
 speed is less than 18 words per minute.
 Try the example from the previous section with and without the **-f**
 option to see the difference.
