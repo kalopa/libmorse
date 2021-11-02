@@ -38,11 +38,11 @@
  *
  * The command-line options are as follows:
  *   -a NN      Set the output volume (0 -> 100)
- *   -f         Invoke "Farnsworth" mode - see the params.c file for info
+ *   -f WPM     Invoke "Farnsworth" mode - see the params.c file for info
  *   -s WPM     Set the WPM (a number between 5 and 60)
  *
  * Try:
- *   ./morse_play -f -s 5 CQ CQ CQ DE EI4HRB
+ *   ./morse_play -f 5 CQ CQ CQ DE EI4HRB
  */
 #include <stdio.h>
 #include <unistd.h>

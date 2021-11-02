@@ -34,7 +34,7 @@ The command-line options are as follows:
 
 For example, try:
 
-    ./morse_play -f -s 5 CQ CQ CQ DE EI4HRB
+    ./morse_play -f 5 CQ CQ CQ DE EI4HRB
 
 ## The Farnsworth Technique
 
