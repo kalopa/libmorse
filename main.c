@@ -59,14 +59,15 @@ void	usage();
 int
 main(int argc, char *argv[])
 {
-	int i, len, wpm, ampl, fw;
+	int i, len, wpm, ampl, fw, repeat;
 	char *str;
 	struct morse *mp;
 
 	wpm = 18;
 	opterr = fw = 0;
+	repeat = 1;
 	ampl = -1;
-	while ((i = getopt(argc, argv, "a:f:s:")) != EOF) {
+	while ((i = getopt(argc, argv, "a:f:s:r:")) != EOF) {
 		switch (i) {
 		case 'a':
 			if ((ampl = atoi(optarg)) < 0 || ampl > 100) {
@@ -87,6 +88,13 @@ main(int argc, char *argv[])
 			fw = 0;
 			if ((wpm = atoi(optarg)) < 5 || wpm > 60) {
 				fprintf(stderr, "WPM value should be between 5 and 60.\n");
+				usage();
+			}
+			break;
+
+		case 'r':
+			if ((repeat = atoi(optarg)) < 1 || repeat > 100) {
+				fprintf(stderr, "Repeat count should be between 1 and 100.\n");
 				usage();
 			}
 			break;
@@ -117,10 +125,13 @@ main(int argc, char *argv[])
 		strcat(str, " ");
 		strcat(str, argv[optind]);
 	}
-	morse_send_string(mp, str);
-	morse_drain(mp);
+	for (i = 0; i < repeat; i++) {
+		morse_send_string(mp, str);
+		morse_audio_silence(mp);
+	}
+	sound_drain(mp);
 	printf("Total time: %.2f seconds.\n", morse_timestamp(mp));
-	morse_close(mp);
+	sound_close(mp);
 	exit(0);
 }
 

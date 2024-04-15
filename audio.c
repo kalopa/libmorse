@@ -41,27 +41,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include <alsa/asoundlib.h>
-
 #include "libmorse.h"
-
-/*
- * Output a 16-bit audio sample. It is buffered locally and then written
- * whenever the buffer is full. We also track a time stamp so we know how
- * much audio has been written.
- */
-static void
-_audio_out(struct morse *mp, int value)
-{
-	snd_pcm_t *handle = (snd_pcm_t *)mp->audio;
-
-	mp->buffer[mp->offset++] = value;
-	if (mp->offset >= AUDIO_BUFFER_SIZE) {
-		snd_pcm_writei(handle, mp->buffer, AUDIO_BUFFER_SIZE);
-		mp->offset = 0;
-	}
-	mp->time_stamp++;
-}
 
 /*
  * Generate a sinusoidal tone at the desired frequency. We use a small curve
@@ -85,7 +65,7 @@ morse_audio_tone(struct morse *mp, int len)
 		} else
 			value = (double )mp->word;
 		theta = (2.0 * M_PI * (double )i * (double )mp->tone_frequency / mp->sample_rate);
-		_audio_out(mp, (int )(value * sin(theta) + 0.5));
+		sound_out(mp, (int )(value * sin(theta) + 0.5));
 	}
 }
 
@@ -97,7 +77,7 @@ void
 morse_audio_silence(struct morse *mp)
 {
 	while (mp->sym_delay > 0) {
-		_audio_out(mp, 0);
+		sound_out(mp, 0);
 		mp->sym_delay--;
 	}
 }

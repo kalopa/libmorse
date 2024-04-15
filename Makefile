@@ -34,9 +34,18 @@
 # ABSTRACT
 # The build system for libmorse.a.
 #
-CFLAGS= -Wall -O
+LIBTOOL=ar
+#CFLAGS= -Wall -O -DSDL2
+CFLAGS= -Wall -O -DALSA
 
-SRCS=	init.c morse.c audio.c params.c
+#SND_SRC=sdl2.c
+#SND_INC=`sdl2-config --cflags`
+#SND_LIB=`sdl2-config --libs`
+SND_SRC=alsa.c
+SND_INC=
+SND_LIB=-lasound
+
+SRCS=	init.c morse.c audio.c params.c $(SND_SRC)
 OBJS=	$(SRCS:.c=.o)
 LIB=	libmorse.a
 
@@ -56,6 +65,9 @@ $(LIB):	$(OBJS)
 	$(AR) r $@ $?
 
 morse_play: main.o $(LIB)
-	$(CC) -o morse_play main.o -L. -lmorse -lasound -lm
+	$(CC) -o morse_play main.o -L. -lmorse $(SND_LIB) -lm
+
+sdl2.o:	sdl2.c
+	$(CC) $(CFLAGS) $(SND_INC) -c -o $@ sdl2.c
 
 $(OBJS): libmorse.h

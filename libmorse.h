@@ -78,9 +78,15 @@ struct morse	*morse_init(int);
 void			morse_send_char(struct morse *, int);
 void			morse_send_word(struct morse *, char *);
 void			morse_send_string(struct morse *, char *);
-void			morse_drain(struct morse *);
-void			morse_close(struct morse *);
 double			morse_timestamp(struct morse *);
 void			morse_calc_params(struct morse *);
 void			morse_audio_tone(struct morse *, int);
 void			morse_audio_silence(struct morse *);
+/*
+ * Platform-specific soundcard functions.
+ */
+void			sound_open(struct morse *);
+void			sound_commence(struct morse *);
+void			sound_out(struct morse *, int);
+void			sound_drain(struct morse *);
+void			sound_close(struct morse *);

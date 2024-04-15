@@ -38,11 +38,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#include <alsa/asoundlib.h>
-
 #include "libmorse.h"
-
-static char		*device = "default";
 
 /*
  * Initialize the Morse Code library. Called with the desired words per
@@ -51,8 +47,6 @@ static char		*device = "default";
 struct morse *
 morse_init(int wpm)
 {
-	int err;
-	snd_pcm_t *handle;
 	struct morse *mp;
 
 	/*
@@ -68,42 +62,6 @@ morse_init(int wpm)
 	mp->sample_rate = 44100;
 	mp->tone_frequency = 800.0;
 	morse_calc_params(mp);
-	/*
-	 * Now initialize the audio output.
-	 */
-	if ((err = snd_pcm_open(&handle, device, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
-		fprintf(stderr, "libmorse init: snd_pcm_open: %s\n", snd_strerror(err));
-		exit(1);
-	}
-	mp->audio = (void *)handle;
+	sound_open(mp);
 	return(mp);
-}
-
-/*
- * Called prior to close. This ensure that any buffered audio is written and
- * we wait until the audio has actually been sent. Don't bother with this
- * code if you just want to exit or close down the library.
- */
-void
-morse_drain(struct morse *mp)
-{
-	int err;
-	snd_pcm_t *handle = (snd_pcm_t *)mp->audio;
-
-	morse_audio_silence(mp);
-	if (mp->offset > 0)
-		snd_pcm_writei(handle, mp->buffer, mp->offset);
-	if ((err = snd_pcm_drain(handle)) < 0)
-		fprintf(stderr, "libmorse drain: snd_pcm_drain: %s\n", snd_strerror(err));
-}
-
-/*
- * Close the library. Doesn't do much except release the ALSA audio channel.
- */
-void
-morse_close(struct morse *mp)
-{
-	snd_pcm_t *handle = (snd_pcm_t *)mp->audio;
-
-	snd_pcm_close(handle);
 }

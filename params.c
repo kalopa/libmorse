@@ -40,8 +40,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#include <alsa/asoundlib.h>
-
 #include "libmorse.h"
 
 #define MIN(a, b)	((a) < (b) ? (a) : (b))
@@ -120,22 +118,10 @@ morse_calc_params(struct morse *mp)
 void
 _morse_commence(struct morse *mp)
 {
-	int err;
-	snd_pcm_t *handle = (snd_pcm_t *)mp->audio;
-
 	morse_calc_params(mp);
 	mp->sym_delay = 0;
 	mp->time_stamp = 0;
-	if ((err = snd_pcm_set_params(handle,
-				SND_PCM_FORMAT_S16_LE,
-				SND_PCM_ACCESS_RW_INTERLEAVED,
-				1,
-				mp->sample_rate,
-				1,
-				500000)) < 0) {
-		fprintf(stderr, "libmorse: snd_pcm_set_params: %s\n", snd_strerror(err));
-		exit(1);
-	}
+	sound_commence(mp);
 	mp->buffer = (unsigned short *)malloc(AUDIO_BUFFER_SIZE * sizeof(unsigned short));
 	if (mp->buffer == NULL) {
 		perror("libmorse: malloc");
